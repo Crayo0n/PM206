@@ -1,0 +1,114 @@
+[
+    {
+        "id": "reglas",
+        "nombre": "La Cámara de las Reglas",
+        "descripcion": "Normas de convivencia y asistencia",
+        "contenido": "REGLAMENTO DEL PROFESOR:\n1. Asistencia: 80% requerido para evaluación y 80% de trabajos en clase.\n2. Puntualidad: 10 minutos de tolerancia.\n3. Justificantes: Máximo 24h mediante el tutor (solo médicos o jurídicos).\n4. Entregas: Vía Classroom. Cero tolerancia a entregas extemporáneas sin justificante.\n5. Sanciones: Plagio o deshonestidad resultan en reprobar parcial o asignatura.\n6. Disciplina: 3 faltas de respeto = pérdida de derecho a examen.\n7. Prohibido: Celulares (salvo actividad), audífonos, comer o beber en clase.\n8. Calificaciones: Asistencia obligatoria el día de retroalimentación.",
+        "preguntas": [
+            {
+                "pregunta": "¿Cuál es el porcentaje mínimo de asistencia requerido?",
+                "opciones": [
+                    "60%",
+                    "70%",
+                    "80%",
+                    "90%"
+                ],
+                "respuesta_correcta": 2
+            },
+            {
+                "pregunta": "¿Cuál es el plazo máximo para presentar un justificante?",
+                "opciones": [
+                    "12 horas",
+                    "24 horas",
+                    "48 horas",
+                    "72 horas"
+                ],
+                "respuesta_correcta": 2
+            }
+        ]
+    },
+    {
+        "id": "notas",
+        "nombre": "El Oráculo de las Notas",
+        "descripcion": "Porcentajes de evaluación",
+        "contenido": "EVALUACIÓN POR PARCIAL (1P / 2P / 3P)\n• Evidencia de Conocimiento: 40% / 40% / 10%\n• Evidencia de Desempeño: 20% / 20% / 10%\n• Evidencia de Producto: 30% / 30% / 30%\n• Proyecto Integrador: 10% / 10% / 50%",
+        "preguntas": [
+            {
+                "pregunta": "¿Qué porcentaje equivale el Proyecto Integrador en el 3er Parcial?",
+                "opciones": [
+                    "10%",
+                    "30%",
+                    "40%",
+                    "50%"
+                ],
+                "respuesta_correcta": 3
+            },
+            {
+                "pregunta": "¿Cuánto vale la Evidencia de Conocimiento en el 1er Parcial?",
+                "opciones": [
+                    "10%",
+                    "20%",
+                    "30%",
+                    "40%"
+                ],
+                "respuesta_correcta": 3
+            }
+        ]
+    },
+    {
+        "id": "skills",
+        "nombre": "Skills a Desbloquear",
+        "descripcion": "Temario de la materia",
+        "contenido": "UNIDAD 1: Introducción al desarrollo de aplicaciones móviles\n• Conceptos básicos y contexto histórico\n• Herramientas de desarrollo\n\nUNIDAD 2: Frameworks para desarrollo móvil\n• Tipos de frameworks\n• Comparativa de plataformas\n\nUNIDAD 3: Interfaz de usuario (UI) y navegación\n• Diseño de layouts\n• Componentes de navegación\n\nUNIDAD 4: Componentes de hardware y sensores\n• Cámara, GPS, acelerómetro\n• Sensores del dispositivo\n\nUNIDAD 5: Publicación de aplicaciones\n• Preparación para distribución\n• Tiendas de aplicaciones",
+        "preguntas": [
+            {
+                "pregunta": "¿Qué unidad cubre el diseño de layouts y navegación?",
+                "opciones": [
+                    "Unidad 1",
+                    "Unidad 2",
+                    "Unidad 3",
+                    "Unidad 4"
+                ],
+                "respuesta_correcta": 2
+            },
+            {
+                "pregunta": "¿En qué unidad se estudia la publicación de aplicaciones?",
+                "opciones": [
+                    "Unidad 2",
+                    "Unidad 3",
+                    "Unidad 4",
+                    "Unidad 5"
+                ],
+                "respuesta_correcta": 3
+            }
+        ]
+    },
+    {
+        "id": "cronograma",
+        "nombre": "La Línea del Tiempo",
+        "descripcion": "Fechas importantes del semestre",
+        "contenido": "• Inicio de clases: Enero 2026\n• 1er Parcial: 02 de Junio de 2026\n• 2do Parcial: 07 de Julio de 2026\n• 3er Parcial: 11 de Agosto de 2026\n• Final: 17 de Agosto de 2026",
+        "preguntas": [
+            {
+                "pregunta": "¿Cuándo es el 1er Parcial?",
+                "opciones": [
+                    "02 de Mayo",
+                    "02 de Junio",
+                    "07 de Julio",
+                    "11 de Agosto"
+                ],
+                "respuesta_correcta": 1
+            },
+            {
+                "pregunta": "¿Cuándo se realiza el 2do Parcial?",
+                "opciones": [
+                    "02 de Junio",
+                    "07 de Julio",
+                    "11 de Agosto",
+                    "17 de Agosto"
+                ],
+                "respuesta_correcta": 1
+            }
+        ]
+    }
+]
