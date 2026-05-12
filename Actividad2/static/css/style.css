@@ -1,0 +1,273 @@
+@import url('https://fonts.googleapis.com/css2?family=Lilita+One&family=Open+Sans:wght@400;600;700&display=swap');
+
+:root {
+    --cr-blue-sky: #2b77c0;
+    --cr-blue-dark: #123e6b;
+    --cr-card-bg: #ece2c6;
+    --cr-card-border: #8c6a46;
+    --cr-card-inner: #fdfaf0;
+    
+    --cr-btn-blue: #40a0ff;
+    --cr-btn-blue-shadow: #1969bc;
+    
+    --cr-btn-yellow: #ffce24;
+    --cr-btn-yellow-shadow: #cc8e00;
+    
+    --cr-btn-green: #66e033;
+    --cr-btn-green-shadow: #3b9117;
+    
+    --cr-text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 3px 0 #000;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    background: radial-gradient(circle at top, var(--cr-blue-sky), var(--cr-blue-dark));
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+    margin: 0;
+    min-height: 100vh;
+    background-attachment: fixed;
+}
+
+h1, h2, h3 {
+    font-family: 'Lilita One', cursive;
+    letter-spacing: 1px;
+    margin-top: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 30px 20px;
+}
+
+header h1 {
+    color: #fff;
+    font-size: 3.5rem;
+    text-shadow: var(--cr-text-shadow);
+    margin: 0;
+    text-transform: uppercase;
+}
+
+header p {
+    color: #ffce24;
+    font-family: 'Lilita One', cursive;
+    font-size: 1.5rem;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    margin-top: -10px;
+}
+
+.secciones {
+    display: grid;
+    gap: 30px;
+}
+
+.seccion-card {
+    background-color: var(--cr-card-bg);
+    border: 6px solid var(--cr-card-border);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.2), 0 10px 20px rgba(0,0,0,0.4);
+    position: relative;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.seccion-card::before {
+    content: '';
+    position: absolute;
+    top: 5px; left: 5px; right: 5px; bottom: 5px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-radius: 6px;
+    pointer-events: none;
+}
+
+.seccion-card:hover {
+    transform: scale(1.02);
+}
+
+.seccion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 3px solid rgba(0,0,0,0.1);
+    padding-bottom: 10px;
+}
+
+.seccion-header h2 {
+    color: #fff;
+    font-size: 2rem;
+    text-shadow: var(--cr-text-shadow);
+    margin: 0;
+}
+
+.seccion-card p {
+    font-weight: 600;
+    color: #4a3a2a;
+    font-size: 1.1rem;
+}
+
+/* Base button */
+.btn {
+    display: inline-block;
+    padding: 12px 25px;
+    margin-top: 15px;
+    margin-right: 10px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-family: 'Lilita One', cursive;
+    font-size: 1.2rem;
+    color: white;
+    text-transform: uppercase;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 2px 0 #000;
+    text-align: center;
+    cursor: pointer;
+    border: 3px solid #000;
+    transition: transform 0.1s, box-shadow 0.1s;
+    position: relative;
+}
+
+.btn:active {
+    transform: translateY(6px);
+}
+
+.btn-primary { 
+    background: var(--cr-btn-blue);
+    box-shadow: 0 6px 0 var(--cr-btn-blue-shadow), 0 8px 10px rgba(0,0,0,0.3);
+}
+.btn-primary:active {
+    box-shadow: 0 0 0 var(--cr-btn-blue-shadow), 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.btn-secondary { 
+    background: var(--cr-btn-yellow);
+    box-shadow: 0 6px 0 var(--cr-btn-yellow-shadow), 0 8px 10px rgba(0,0,0,0.3);
+}
+.btn-secondary:active {
+    box-shadow: 0 0 0 var(--cr-btn-yellow-shadow), 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.btn-disabled { 
+    background: #9aa2a8;
+    color: #e4e7ea;
+    border-color: #555;
+    text-shadow: none;
+    box-shadow: 0 6px 0 #687076;
+    cursor: not-allowed;
+}
+.btn-disabled:active {
+    transform: none;
+    box-shadow: 0 6px 0 #687076;
+}
+
+.status-badge {
+    padding: 6px 14px;
+    border-radius: 12px;
+    font-family: 'Lilita One', cursive;
+    font-size: 1rem;
+    text-transform: uppercase;
+    border: 2px solid #000;
+    color: white;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    box-shadow: 0 3px 0 rgba(0,0,0,0.4);
+}
+.status-bloqueada { 
+    background: #9aa2a8;
+}
+.status-desbloqueada { 
+    background: var(--cr-btn-green); 
+}
+.status-casi_lista {
+    background: var(--cr-btn-yellow);
+}
+
+.opciones {
+    margin-top: 20px;
+    background: rgba(0,0,0,0.05);
+    padding: 15px;
+    border-radius: 10px;
+    border: 2px solid rgba(0,0,0,0.1);
+}
+.opcion { margin-bottom: 12px; }
+.opcion label {
+    display: block;
+    padding: 15px 20px;
+    background: #fff;
+    border: 3px solid #ccc;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 700;
+    color: #444;
+    box-shadow: 0 4px 0 #ccc;
+}
+.opcion label:hover {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #ccc;
+}
+.opcion input[type="radio"] {
+    display: none;
+}
+.opcion input[type="radio"]:checked + label {
+    border-color: var(--cr-btn-blue);
+    background: #e6f2ff;
+    box-shadow: 0 4px 0 var(--cr-btn-blue-shadow);
+    color: var(--cr-btn-blue-shadow);
+}
+.opcion input[type="radio"]:checked + label:active {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 var(--cr-btn-blue-shadow);
+}
+
+.contenido {
+    background: var(--cr-card-inner);
+    padding: 20px;
+    border-radius: 8px;
+    white-space: pre-wrap;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    font-size: 1.1em;
+    color: #3e2f20;
+    margin: 20px 0;
+    border: 3px solid rgba(0,0,0,0.1);
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Animations */
+@keyframes bounceIn {
+    0% { transform: scale(0.1); opacity: 0; }
+    60% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.seccion-card {
+    animation: bounceIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    opacity: 0;
+}
+
+.seccion-card:nth-child(1) { animation-delay: 0.1s; }
+.seccion-card:nth-child(2) { animation-delay: 0.2s; }
+.seccion-card:nth-child(3) { animation-delay: 0.3s; }
+.seccion-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* Customizing the incorrect alert */
+.alert-incorrect {
+    background: #ff5252;
+    padding: 20px;
+    border-radius: 12px;
+    border: 4px solid #b71c1c;
+    margin: 15px 0;
+    box-shadow: 0 5px 0 #b71c1c;
+    color: white;
+}
+.alert-incorrect strong {
+    font-size: 1.2em;
+    font-family: 'Lilita One', cursive;
+    text-shadow: 1px 1px 0 #000;
+}

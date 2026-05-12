@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PM206 - Aventura de Orientación</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Aventura de Orientación</h1>
+            <p>Programación Móvil - PM206</p>
+        </header>
+
+        <main class="secciones">
+            {% for seccion in secciones %}
+            <article class="seccion-card {{ seccion.estado }}">
+                <div class="seccion-header">
+                    <h2>{{ seccion.nombre }}</h2>
+                    <span class="status-badge status-{{ seccion.estado }}">
+                        {{ seccion.estado | capitalize }}
+                    </span>
+                </div>
+                <p>{{ seccion.descripcion }}</p>
+
+                <div class="btn-group">
+                    {% if seccion.estado == 'desbloqueada' %}
+                    <a href="{{ url_for('ver_seccion', seccion_id=seccion.id) }}" class="btn btn-primary">Explorar</a>
+                    <a href="{{ url_for('hacer_pregunta', seccion_id=seccion.id) }}" class="btn btn-secondary">Preguntas</a>
+                    {% if seccion.preguntas_respondidas >= 2 %}
+                    <form action="{{ url_for('marcar_compromiso', seccion_id=seccion.id) }}" method="POST" style="display: inline;">
+                        <button type="submit" class="btn btn-primary">Check de Compromiso</button>
+                    </form>
+                    {% endif %}
+                    {% else %}
+                    <span class="btn btn-disabled">Bloqueado</span>
+                    {% endif %}
+                </div>
+            </article>
+            {% endfor %}
+        </main>
+
+        <footer style="text-align: center; margin-top: 40px; padding: 20px;">
+            <a href="{{ url_for('reset_cuestionarios') }}" class="btn btn-secondary" onclick="return confirm('¿Reiniciar todos los cuestionarios?')">Reiniciar Cuestionarios</a>
+        </footer>
+    </div>
+</body>
+</html>

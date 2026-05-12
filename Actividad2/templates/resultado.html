@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado - PM206</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <article class="seccion-card">
+            <h1>{% if es_correcta %}¡Perfecto!{% else %}Sigue intentando{% endif %}</h1>
+
+            <p>
+                {% if es_correcta %}
+                    Obtuviste <strong>{{ correctas }} / {{ total }}</strong> respuestas correctas. ¡Has demostrado tu conocimiento!
+                {% else %}
+                    Obtuviste <strong>{{ correctas }} / {{ total }}</strong> respuestas correctas. Necesitas acertar todas para completar la sección.
+                {% endif %}
+            </p>
+
+            {% if not es_correcta %}
+            <div class="alert-incorrect">
+                <p style="margin: 0;"><strong>¡No te rindas!</strong> Vuelve a leer la sección e inténtalo de nuevo.</p>
+            </div>
+            {% endif %}
+
+            <div class="btn-group">
+                {% if es_correcta %}
+                    <a href="{{ url_for('index') }}" class="btn btn-primary">Volver al Mapa</a>
+                {% else %}
+                    <a href="{{ url_for('hacer_pregunta', seccion_id=seccion.id) }}" class="btn btn-primary">Reintentar</a>
+                    <a href="{{ url_for('index') }}" class="btn btn-secondary">Volver al Mapa</a>
+                {% endif %}
+            </div>
+        </article>
+    </div>
+</body>
+</html>
