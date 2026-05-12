@@ -67,16 +67,25 @@ def responder(seccion_id):
     if seccion_id not in session['secciones_desbloqueadas']:
         return redirect(url_for('index'))
 
-    respuesta = int(request.form['respuesta'])
-    pregunta_idx = int(request.form['pregunta_idx'])
     seccion = next((s for s in SECCIONES if s['id'] == seccion_id), None)
+    if not seccion:
+        return redirect(url_for('index'))
 
-    es_correcta = seccion['preguntas'][pregunta_idx]['respuesta_correcta'] == respuesta
+    correctas = 0
+    total = len(seccion['preguntas'])
+    
+    for i, pregunta in enumerate(seccion['preguntas']):
+        respuesta_usuario = request.form.get(f'respuesta_{i}')
+        if respuesta_usuario is not None and int(respuesta_usuario) == pregunta['respuesta_correcta']:
+            correctas += 1
 
-    session['preguntas_respondidas'][seccion_id] = session['preguntas_respondidas'].get(seccion_id, 0) + 1
-    session.modified = True
+    es_correcta = (correctas == total)
 
-    return render_template('resultado.html', seccion=seccion, es_correcta=es_correcta, pregunta_idx=pregunta_idx)
+    if es_correcta:
+        session['preguntas_respondidas'][seccion_id] = total
+        session.modified = True
+
+    return render_template('resultado.html', seccion=seccion, es_correcta=es_correcta, correctas=correctas, total=total)
 
 @app.route('/compromiso/<seccion_id>', methods=['POST'])
 def marcar_compromiso(seccion_id):
