@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preguntas - {{ seccion.nombre }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">← Volver al Mapa</a>
+
+        <article class="seccion-card">
+            <h3>{{ seccion.nombre }}</h3>
+            
+            <form action="{{ url_for('responder', seccion_id=seccion.id) }}" method="POST">
+                {% for pregunta_obj in seccion.preguntas %}
+                {% set p_idx = loop.index0 %}
+                <div style="margin-bottom: 30px;">
+                    <p><strong>{{ loop.index }}. {{ pregunta_obj.pregunta }}</strong></p>
+                    <div class="opciones">
+                        {% for opcion in pregunta_obj.opciones %}
+                        <div class="opcion">
+                            <input type="radio" id="opcion_{{ p_idx }}_{{ loop.index0 }}" name="respuesta_{{ p_idx }}" value="{{ loop.index0 }}" required>
+                            <label for="opcion_{{ p_idx }}_{{ loop.index0 }}">{{ opcion }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">Confirmar Respuestas</button>
+                </div>
+            </form>
+        </article>
+    </div>
+</body>
+</html>

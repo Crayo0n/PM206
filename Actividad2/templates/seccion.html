@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ seccion.nombre }} - PM206</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">← Volver al Mapa</a>
+
+        <article class="seccion-card">
+            <h1>{{ seccion.nombre }}</h1>
+            <p>{{ seccion.descripcion }}</p>
+
+            <div class="contenido">{{ seccion.contenido }}</div>
+
+            <div class="btn-group">
+                <a href="{{ url_for('hacer_pregunta', seccion_id=seccion.id) }}" class="btn btn-primary">Responder Preguntas</a>
+            </div>
+        </article>
+    </div>
+</body>
+</html>
