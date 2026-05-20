@@ -1,7 +1,6 @@
 let listaPedidos = [];
 let totalAcumulado = 0;
 
-// Lógica de Datos (Core Logic)
 function agregarPedido(pedido) {
   listaPedidos.push(pedido);
   totalAcumulado += Number(pedido.total);
@@ -15,7 +14,6 @@ function obtenerTotalAcumulado() {
   return totalAcumulado;
 }
 
-// Funciones de Interfaz (UI) y Renderizado
 function renderCaja() {
   let totalEl = document.getElementById("totalCaja");
   if (totalEl) {
@@ -84,7 +82,6 @@ function uiCrearPedidoCaja() {
     
     uiRegistrarPedido(nuevoPedido);
     
-    // Desmarcar todos los checkboxes
     checks.forEach(c => c.checked = false);
   } else {
     alert("Por favor, selecciona al menos un producto.");

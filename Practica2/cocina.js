@@ -102,13 +102,17 @@ function uiGuardarEdicion(id) {
 }
 
 function uiEliminarProducto(id) {
-  eliminarProducto(id);
-  renderCocina();
-  if (typeof uiConsultarProductos === "function") {
-    uiConsultarProductos();
-  }
-  if (typeof renderProductosCaja === "function") {
-    renderProductosCaja();
+  let producto = productos.find(p => p.id === Number(id));
+  let nombre = producto ? producto.nombre : "este producto";
+  if (confirm(`¿Estás seguro de que deseas eliminar el producto "${nombre}"?`)) {
+    eliminarProducto(id);
+    renderCocina();
+    if (typeof uiConsultarProductos === "function") {
+      uiConsultarProductos();
+    }
+    if (typeof renderProductosCaja === "function") {
+      renderProductosCaja();
+    }
   }
 }
 
