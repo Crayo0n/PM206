@@ -1,11 +1,11 @@
 let productos = [
-  { id: 1, nombre: "Cafe Americano", precio: 35 },
-  { id: 2, nombre: "Capuccino", precio: 45 },
-  { id: 3, nombre: "Muffin", precio: 30 }
+  { id: 1, nombre: "Cafe Americano", precio: 35, categoria: "Bebida" },
+  { id: 2, nombre: "Capuccino", precio: 45, categoria: "Bebida" },
+  { id: 3, nombre: "Muffin", precio: 30, categoria: "Postre" }
 ];
 
-function agregarProducto(id, nombre, precio) {
-  productos.push({ id: Number(id), nombre, precio: Number(precio) });
+function agregarProducto(id, nombre, precio, categoria = "Otro") {
+  productos.push({ id: Number(id), nombre, precio: Number(precio), categoria });
 }
 
 function editarProducto(id, nuevoNombre, nuevoPrecio) {
@@ -102,17 +102,90 @@ function uiGuardarEdicion(id) {
 }
 
 function uiEliminarProducto(id) {
-  let producto = productos.find(p => p.id === Number(id));
-  let nombre = producto ? producto.nombre : "este producto";
-  if (confirm(`¿Estás seguro de que deseas eliminar el producto "${nombre}"?`)) {
-    eliminarProducto(id);
-    renderCocina();
-    if (typeof uiConsultarProductos === "function") {
-      uiConsultarProductos();
-    }
-    if (typeof renderProductosCaja === "function") {
-      renderProductosCaja();
-    }
+  eliminarProducto(id);
+  renderCocina();
+  if (typeof uiConsultarProductos === "function") {
+    uiConsultarProductos();
   }
+  if (typeof renderProductosCaja === "function") {
+    renderProductosCaja();
+  }
+}
+
+function buscarProductosBaratos() {
+  return productos.filter(p => p.precio < 40);
+}
+
+function buscarProductosCaros() {
+  return productos.filter(p => p.precio >= 40);
+}
+
+function buscarBebidas() {
+  const palabrasClave = ["cafe", "capuccino", "agua", "refresco", "jugo", "te", "bebida", "café"];
+  return productos.filter(p => 
+    (p.categoria && p.categoria.toLowerCase() === "bebida") || 
+    palabrasClave.some(palabra => p.nombre.toLowerCase().includes(palabra))
+  );
+}
+
+function buscarPostres() {
+  const palabrasClave = ["muffin", "pastel", "galleta", "crepa", "postre", "pay"];
+  return productos.filter(p => 
+    (p.categoria && p.categoria.toLowerCase() === "postre") || 
+    palabrasClave.some(palabra => p.nombre.toLowerCase().includes(palabra))
+  );
+}
+
+function buscarProductoPorNombre(nombreBuscado) {
+  return productos.find(p => p.nombre.toLowerCase() === nombreBuscado.toLowerCase());
+}
+
+function buscarProductoPorId(id) {
+  return productos.find(p => p.id === Number(id));
+}
+
+
+
+let promociones = [];
+function agregarPromocion(idProducto, descuento, descripcion) {
+  let producto = productos.find(p => p.id === Number(idProducto));
+  if (producto) {
+    promociones.push({
+      idProducto: Number(idProducto),
+      nombreProducto: producto.nombre,
+      precioOriginal: producto.precio,
+      descuento: Number(descuento),
+      precioConDescuento: +(producto.precio * (1 - Number(descuento) / 100)).toFixed(2),
+      descripcion: descripcion || `${descuento}% de descuento en ${producto.nombre}`
+    });
+  }
+}
+function eliminarPromocion(idProducto) {
+  promociones = promociones.filter(p => p.idProducto !== Number(idProducto));
+}
+
+function listarPromociones() {
+  return promociones;
+}
+
+function buscarProductosEnPromocion() {
+  let idsEnPromo = promociones.map(p => p.idProducto);
+  return productos.filter(p => idsEnPromo.includes(p.id));
+}
+function buscarPromocionPorProducto(idProducto) {
+  return promociones.find(p => p.idProducto === Number(idProducto));
+}
+
+function tienePromocion(idProducto) {
+  return promociones.find(p => p.idProducto === Number(idProducto)) !== undefined;
+}
+
+function obtenerPrecioFinal(idProducto) {
+  let promo = promociones.find(p => p.idProducto === Number(idProducto));
+  if (promo) {
+    return promo.precioConDescuento;
+  }
+  let producto = productos.find(p => p.id === Number(idProducto));
+  return producto ? producto.precio : null;
 }
 
