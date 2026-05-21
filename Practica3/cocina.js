@@ -25,11 +25,17 @@ function listarProductos() {
 }
 let productoEditandoId = null;
 
-function renderCocina() {
+function renderCocina(listaFiltro) {
   let div = document.getElementById("listaProductosCocina");
   if (!div) return;
   div.innerHTML = "";
-  let lista = listarProductos();
+  let lista = listaFiltro || listarProductos();
+  
+  if (lista.length === 0) {
+    div.innerHTML = "<p>No se encontraron productos.</p>";
+    return;
+  }
+  
   lista.forEach(p => {
     if (p.id === productoEditandoId) {
       div.innerHTML += `
@@ -144,6 +150,22 @@ function buscarProductoPorId(id) {
   return productos.find(p => p.id === Number(id));
 }
 
+function uiFiltrarProductosCocina(funcionFiltro) {
+  let lista = funcionFiltro();
+  renderCocina(lista);
+}
+
+function uiBuscarPorNombreCocina() {
+  let nombre = document.getElementById("busquedaCocina").value.trim();
+  if (nombre === "") {
+    renderCocina();
+    return;
+  }
+  let producto = buscarProductoPorNombre(nombre);
+  let lista = producto ? [producto] : [];
+  renderCocina(lista);
+}
+
 
 
 let promociones = [];
@@ -160,32 +182,39 @@ function agregarPromocion(idProducto, descuento, descripcion) {
     });
   }
 }
-function eliminarPromocion(idProducto) {
-  promociones = promociones.filter(p => p.idProducto !== Number(idProducto));
-}
-
 function listarPromociones() {
   return promociones;
 }
 
-function buscarProductosEnPromocion() {
-  let idsEnPromo = promociones.map(p => p.idProducto);
-  return productos.filter(p => idsEnPromo.includes(p.id));
-}
-function buscarPromocionPorProducto(idProducto) {
-  return promociones.find(p => p.idProducto === Number(idProducto));
-}
-
-function tienePromocion(idProducto) {
-  return promociones.find(p => p.idProducto === Number(idProducto)) !== undefined;
+function renderPromocionesCocina() {
+  let div = document.getElementById("listaPromocionesCocina");
+  if (!div) return;
+  div.innerHTML = "";
+  let lista = listarPromociones();
+  lista.forEach(promo => {
+    div.innerHTML += `<div class="producto-item">[Prod ID: ${promo.idProducto}] ${promo.descripcion} - $${promo.precioConDescuento}</div>`;
+  });
 }
 
-function obtenerPrecioFinal(idProducto) {
-  let promo = promociones.find(p => p.idProducto === Number(idProducto));
-  if (promo) {
-    return promo.precioConDescuento;
+function uiCrearPromocionCocina() {
+  let idProducto = document.getElementById("promoProdId").value;
+  let descuento = document.getElementById("promoDescuento").value;
+  let descripcion = document.getElementById("promoDesc").value;
+  
+  if (idProducto && descuento) {
+    agregarPromocion(idProducto, descuento, descripcion);
+    
+    document.getElementById("promoProdId").value = "";
+    document.getElementById("promoDescuento").value = "";
+    document.getElementById("promoDesc").value = "";
+    
+    renderPromocionesCocina();
+    // Actualizar también la vista del cliente si existe
+    if (typeof uiConsultarPromociones === "function") {
+      uiConsultarPromociones();
+    }
+  } else {
+    alert("Por favor, ingresa el ID del producto y el porcentaje de descuento.");
   }
-  let producto = productos.find(p => p.id === Number(idProducto));
-  return producto ? producto.precio : null;
 }
 

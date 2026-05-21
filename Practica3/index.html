@@ -43,7 +43,24 @@
       <button onclick="uiAgregarProducto()">Agregar Producto</button>
     </div>
     <h3>Gestión de Productos</h3>
+    <div style="margin-bottom: 10px;">
+      <button onclick="renderCocina()">Todos</button>
+      <button onclick="uiFiltrarProductosCocina(buscarBebidas)">Bebidas</button>
+      <button onclick="uiFiltrarProductosCocina(buscarPostres)">Postres</button>
+      <button onclick="uiFiltrarProductosCocina(buscarProductosBaratos)">Económicos</button>
+      <input type="text" id="busquedaCocina" placeholder="Buscar por nombre..." style="margin-left: 10px;">
+      <button onclick="uiBuscarPorNombreCocina()">Buscar</button>
+    </div>
     <div id="listaProductosCocina"></div>
+    
+    <h3>Gestión de Promociones</h3>
+    <div>
+      <input type="number" id="promoProdId" placeholder="ID Producto" style="width: 80px;">
+      <input type="number" id="promoDescuento" placeholder="% Desc" style="width: 70px;">
+      <input type="text" id="promoDesc" placeholder="Descripción (Opcional)">
+      <button onclick="uiCrearPromocionCocina()">Crear Promoción</button>
+    </div>
+    <div id="listaPromocionesCocina" style="margin-top: 10px;"></div>
   </div>
 
   <div class="seccion">

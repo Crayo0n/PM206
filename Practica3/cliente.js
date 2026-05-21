@@ -50,6 +50,26 @@ function uiConsultarProductos() {
   });
 }
 
+function uiConsultarPromociones() {
+  let div = document.getElementById("listaPromocionesCliente");
+  if (!div) return;
+  div.innerHTML = "";
+  let lista = listarPromociones();
+  
+  if (lista.length === 0) {
+    div.innerHTML = "<p>No hay promociones disponibles por el momento.</p>";
+    return;
+  }
+  
+  lista.forEach(promo => {
+    div.innerHTML += `
+      <div style="font-weight: bold; margin-bottom: 5px;">
+         ${promo.descripcion} - $${promo.precioConDescuento}
+      </div>
+    `;
+  });
+}
+
 function uiCrearPedido() {
   let checks = document.querySelectorAll('input[name="pedidosCheck"]:checked');
   let ids = [];
@@ -79,5 +99,6 @@ document.addEventListener("DOMContentLoaded", () => {
     renderCocina();
   }
   uiConsultarProductos();
+  uiConsultarPromociones();
 });
 
