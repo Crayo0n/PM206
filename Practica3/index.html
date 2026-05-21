@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Coffee Code - Sistema de Cafetería</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    .seccion {
+      border: 1px solid #ccc;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+    }
+    .producto-item, .pedido-item {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Coffee Code - Sistema de Cafetería</h1>
+
+  <div class="seccion">
+    <h2>1. Caja</h2>
+    <h3>Total Acumulado: $<span id="totalCaja">0</span></h3>
+    
+    <h3>Toma de Pedido</h3>
+    <div id="productosCaja" style="margin-bottom: 10px;"></div>
+    <button onclick="uiCrearPedidoCaja()">Crear Pedido en Caja</button>
+    
+    <h3>Registro de Pedidos</h3>
+    <div id="listaPedidosCaja"></div>
+  </div>
+
+  <div class="seccion">
+    <h2>2. Cocina</h2>
+    <div>
+      <input type="number" id="prodId" placeholder="ID">
+      <input type="text" id="prodNombre" placeholder="Nombre">
+      <input type="number" id="prodPrecio" placeholder="Precio">
+      <button onclick="uiAgregarProducto()">Agregar Producto</button>
+    </div>
+    <h3>Gestión de Productos</h3>
+    <div id="listaProductosCocina"></div>
+  </div>
+
+  <div class="seccion">
+    <h2>3. Cliente</h2>
+    <h3>Menú para Pedido</h3>
+    <div id="listaProductosCliente"></div>
+    <button onclick="uiCrearPedido()">Crear Pedido</button>
+    <h3>Listar Pedidos</h3>
+    <div id="listaPedidosCliente"></div>
+  </div>
+
+  <script src="cocina.js"></script>
+  <script src="caja.js"></script>
+  <script src="cliente.js"></script>
+</body>
+</html>
