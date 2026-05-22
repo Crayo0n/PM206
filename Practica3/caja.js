@@ -1,5 +1,6 @@
 
 let listaPedidos = [];
+let carritoCaja = [];
 
 function agregarPedido(pedido) {
   if (pedido.subtotal === undefined || pedido.iva === undefined) {
@@ -68,34 +69,105 @@ function renderProductosCaja() {
   let lista = listarProductos();
   lista.forEach(p => {
     const { id, nombre, precio } = p;
+    let precioMostrar = precio;
+    let promoInfo = "";
+    if (typeof listarPromociones === "function") {
+      let promo = listarPromociones().find(pr => pr.idProducto === id);
+      if (promo) {
+        precioMostrar = promo.precioConDescuento;
+        promoInfo = ` <span style="color: red; font-size: 0.85em; font-weight: bold;">(${promo.descuento}% desc.)</span>`;
+      }
+    }
     div.innerHTML += `
-      <div style="margin-bottom: 5px;">
-        <label>
-          <input type="checkbox" name="cajaCheck" value="${id}">
-          ${nombre} - $${precio.toFixed(2)}
-        </label>
+      <div style="margin-bottom: 5px; display: flex; align-items: center; gap: 8px;">
+        <span>${nombre} - $${precioMostrar.toFixed(2)}${promoInfo}</span>
+        <button onclick="uiAgregarAlCarritoCaja(${id})" style="padding: 2px 6px; cursor: pointer;">Añadir</button>
       </div>
     `;
   });
 }
 
-function uiCrearPedidoCaja() {
-  let checks = document.querySelectorAll('input[name="cajaCheck"]:checked');
-  let ids = [];
-  checks.forEach(c => ids.push(Number(c.value)));
+function uiAgregarAlCarritoCaja(id) {
+  if (typeof listarProductos !== "function") return;
+  let todos = listarProductos();
+  let prod = todos.find(p => p.id === id);
+  if (!prod) return;
 
-  if (ids.length > 0) {
-    let items = [];
-
-    if (typeof listarProductos === "function") {
-      let todosLosProductos = listarProductos();
-      ids.forEach(id => {
-        let prod = todosLosProductos.find(p => p.id === id);
-        if (prod) {
-          items.push(prod);
-        }
-      });
+  let precioFinal = prod.precio;
+  if (typeof listarPromociones === "function") {
+    let promo = listarPromociones().find(pr => pr.idProducto === id);
+    if (promo) {
+      precioFinal = promo.precioConDescuento;
     }
+  }
+
+  let item = carritoCaja.find(c => c.id === id);
+  if (item) {
+    item.cantidad++;
+  } else {
+    carritoCaja.push({
+      id: prod.id,
+      nombre: prod.nombre,
+      precio: precioFinal,
+      cantidad: 1
+    });
+  }
+  uiRenderCarritoCaja();
+}
+
+function uiCambiarCantidadCaja(id, cambio) {
+  let item = carritoCaja.find(c => c.id === id);
+  if (!item) return;
+
+  item.cantidad += cambio;
+  if (item.cantidad <= 0) {
+    carritoCaja = carritoCaja.filter(c => c.id !== id);
+  }
+  uiRenderCarritoCaja();
+}
+
+function uiRenderCarritoCaja() {
+  let div = document.getElementById("carritoCajaContenido");
+  if (!div) return;
+  div.innerHTML = "";
+
+  if (carritoCaja.length === 0) {
+    div.innerHTML = "El carrito está vacío.";
+    return;
+  }
+
+  let subtotal = 0;
+  carritoCaja.forEach(item => {
+    let itemSubtotal = item.precio * item.cantidad;
+    subtotal += itemSubtotal;
+    div.innerHTML += `
+      <div style="margin-bottom: 6px; display: flex; align-items: center; gap: 15px; font-size: 0.95em;">
+        <span>${item.nombre} - $${item.precio.toFixed(2)} x ${item.cantidad} ($${itemSubtotal.toFixed(2)})</span>
+        <div style="display: inline-flex; gap: 3px;">
+          <button onclick="uiCambiarCantidadCaja(${item.id}, 1)" style="padding: 1px 5px; cursor: pointer;">+</button>
+          <button onclick="uiCambiarCantidadCaja(${item.id}, -1)" style="padding: 1px 5px; cursor: pointer;">-</button>
+        </div>
+      </div>
+    `;
+  });
+
+  let iva = subtotal * 0.16;
+  let total = subtotal + iva;
+
+  div.innerHTML += `
+    <div style="margin-top: 8px; padding-top: 6px; border-top: 1px solid #ccc; font-size: 0.9em; color: #555;">
+      Subtotal: $${subtotal.toFixed(2)} | IVA (16%): $${iva.toFixed(2)} | <strong>Total: $${total.toFixed(2)}</strong>
+    </div>
+  `;
+}
+
+function uiCrearPedidoCaja() {
+  if (carritoCaja.length > 0) {
+    let items = carritoCaja.map(item => ({
+      id: item.id,
+      nombre: item.cantidad > 1 ? `${item.nombre} (x${item.cantidad})` : item.nombre,
+      precio: item.precio * item.cantidad
+    }));
 
     const subtotal = items.reduce((acum, { precio }) => acum + Number(precio), 0);
     const iva = subtotal * 0.16;
@@ -111,13 +183,15 @@ function uiCrearPedidoCaja() {
 
     uiRegistrarPedido(nuevoPedido);
 
-    checks.forEach(c => c.checked = false);
+    carritoCaja = [];
+    uiRenderCarritoCaja();
   } else {
-    alert("Por favor, selecciona al menos un producto.");
+    alert("Por favor, agrega al menos un producto al carrito de caja.");
   }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   renderProductosCaja();
   renderCaja();
+  uiRenderCarritoCaja();
 });

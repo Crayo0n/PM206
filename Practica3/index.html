@@ -29,7 +29,11 @@
     <h2>1. Caja</h2>
     <h3>Productos para Cobrar</h3>
     <div id="productosCaja" style="margin-bottom: 10px;"></div>
+    
+    <h3>Carrito de Caja</h3>
+    <div id="carritoCajaContenido" style="margin-bottom: 10px; padding: 10px; border: 1px dashed #ccc; border-radius: 4px;">El carrito está vacío.</div>
     <button onclick="uiCrearPedidoCaja()" style="margin-bottom: 15px; padding: 5px 10px;">Pagado</button>
+    
     <h3>Registro de Pedidos</h3>
     <div id="listaPedidosCaja"></div>
   </div>
@@ -47,9 +51,8 @@
       <button onclick="renderCocina()">Todos</button>
       <button onclick="uiFiltrarProductosCocina(buscarBebidas)">Bebidas</button>
       <button onclick="uiFiltrarProductosCocina(buscarPostres)">Postres</button>
-      <button onclick="uiFiltrarProductosCocina(buscarProductosBaratos)">Económicos</button>
-      <input type="text" id="busquedaCocina" placeholder="Buscar por nombre..." style="margin-left: 10px;">
-      <button onclick="uiBuscarPorNombreCocina()">Buscar</button>
+      <button onclick="uiFiltrarProductosCocina(buscarProductosBaratos)">Baratos</button>
+      <button onclick="uiFiltrarProductosCocina(buscarProductosCaros)">Caros</button>
     </div>
     <div id="listaProductosCocina"></div>
     
@@ -69,7 +72,11 @@
     <div id="listaPromocionesCliente"></div>
     <h3>Menú para Pedido</h3>
     <div id="listaProductosCliente"></div>
+    
+    <h3>Carrito de Compra</h3>
+    <div id="carritoClienteContenido" style="margin-bottom: 10px; padding: 10px; border: 1px dashed #ccc; border-radius: 4px;">El carrito está vacío.</div>
     <button onclick="uiCrearPedido()">Crear Pedido</button>
+    
     <h3>Listar Pedidos</h3>
     <div id="listaPedidosCliente"></div>
   </div>
