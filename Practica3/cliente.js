@@ -7,10 +7,12 @@ function consultarProductos() {
   return productos;
 }
 
-function crearPedidoProductos(ids) {
+function crearPedidoProductos(ids, promoIds = []) {
   let items = [];
   let total = 0;
   let todosLosProductos = (typeof listarProductos === "function") ? listarProductos() : productos;
+
+  // Agregar productos regulares
   ids.forEach(id => {
     let prod = todosLosProductos.find(p => p.id === Number(id));
     if (prod) {
@@ -18,6 +20,25 @@ function crearPedidoProductos(ids) {
       total += prod.precio;
     }
   });
+
+  // Agregar productos en promoción
+  if (typeof listarPromociones === "function") {
+    let todasLasPromociones = listarPromociones();
+    promoIds.forEach(id => {
+      let promo = todasLasPromociones.find(p => p.idProducto === Number(id));
+      if (promo) {
+        // Formatear la promoción como un producto para la caja
+        items.push({
+          id: promo.idProducto,
+          nombre: `[PROMO] ${promo.nombreProducto}`,
+          precio: promo.precioConDescuento,
+          categoria: "Promoción"
+        });
+        total += promo.precioConDescuento;
+      }
+    });
+  }
+
   let nuevoPedido = {
     id: pedidosCliente.length + 1,
     items: items,
@@ -26,7 +47,7 @@ function crearPedidoProductos(ids) {
   pedidosCliente.push(nuevoPedido);
   if (typeof uiRegistrarPedido === "function") {
     uiRegistrarPedido(nuevoPedido);
-  } else {
+  } else if (typeof agregarPedido === "function") {
     agregarPedido(nuevoPedido);
   }
 }
@@ -63,8 +84,18 @@ function uiConsultarPromociones() {
   
   lista.forEach(promo => {
     div.innerHTML += `
-      <div style="font-weight: bold; margin-bottom: 5px;">
-         ${promo.descripcion} - $${promo.precioConDescuento}
+      <div style="border: 1px solid #ffcc00; padding: 10px; border-radius: 5px; margin-bottom: 10px; background-color: #fffdf0; display: inline-block; width: 200px; vertical-align: top;">
+         <div style="font-weight: bold; margin-bottom: 5px; color: #cc5500;">
+           ${promo.descripcion}
+         </div>
+         <div style="margin-bottom: 10px;">
+           <span style="text-decoration: line-through; color: #999;">$${promo.precioOriginal}</span>
+           <span style="font-size: 1.2em; color: #d32f2f; font-weight: bold;">$${promo.precioConDescuento}</span>
+         </div>
+         <label style="cursor: pointer; display: block; text-align: center; background-color: #ff9800; color: white; padding: 5px; border-radius: 3px;">
+           <input type="checkbox" name="promocionesCheck" value="${promo.idProducto}">
+           Agregar al Pedido
+         </label>
       </div>
     `;
   });
@@ -74,11 +105,18 @@ function uiCrearPedido() {
   let checks = document.querySelectorAll('input[name="pedidosCheck"]:checked');
   let ids = [];
   checks.forEach(c => ids.push(Number(c.value)));
-  if (ids.length > 0) {
-    crearPedidoProductos(ids);
+
+  let promoChecks = document.querySelectorAll('input[name="promocionesCheck"]:checked');
+  let promoIds = [];
+  promoChecks.forEach(c => promoIds.push(Number(c.value)));
+
+  if (ids.length > 0 || promoIds.length > 0) {
+    crearPedidoProductos(ids, promoIds);
     renderClientePedidos();
     uiConsultarProductos();
+    uiConsultarPromociones(); // Reset checks in promotions
     checks.forEach(c => c.checked = false);
+    promoChecks.forEach(c => c.checked = false);
   }
 }
 
