@@ -7,10 +7,12 @@ function consultarProductos() {
   return productos;
 }
 
-function crearPedidoProductos(ids) {
+function crearPedidoProductos(ids, promoIds = []) {
   let items = [];
   let total = 0;
   let todosLosProductos = (typeof listarProductos === "function") ? listarProductos() : productos;
+  let todasLasPromociones = (typeof listarPromociones === "function") ? listarPromociones() : [];
+
   ids.forEach(id => {
     let prod = todosLosProductos.find(p => p.id === Number(id));
     if (prod) {
@@ -18,6 +20,18 @@ function crearPedidoProductos(ids) {
       total += prod.precio;
     }
   });
+
+  promoIds.forEach(index => {
+    let promo = todasLasPromociones[index];
+    if (promo) {
+      items.push({
+        nombre: promo.descripcion,
+        precio: promo.precioConDescuento
+      });
+      total += promo.precioConDescuento;
+    }
+  });
+
   let nuevoPedido = {
     id: pedidosCliente.length + 1,
     items: items,
@@ -26,7 +40,7 @@ function crearPedidoProductos(ids) {
   pedidosCliente.push(nuevoPedido);
   if (typeof uiRegistrarPedido === "function") {
     uiRegistrarPedido(nuevoPedido);
-  } else {
+  } else if (typeof agregarPedido === "function") {
     agregarPedido(nuevoPedido);
   }
 }
@@ -54,6 +68,8 @@ function uiConsultarPromociones() {
   let div = document.getElementById("listaPromocionesCliente");
   if (!div) return;
   div.innerHTML = "";
+  if (typeof listarPromociones !== "function") return;
+
   let lista = listarPromociones();
   
   if (lista.length === 0) {
@@ -61,10 +77,13 @@ function uiConsultarPromociones() {
     return;
   }
   
-  lista.forEach(promo => {
+  lista.forEach((promo, index) => {
     div.innerHTML += `
       <div style="font-weight: bold; margin-bottom: 5px;">
-         ${promo.descripcion} - $${promo.precioConDescuento}
+        <label>
+          <input type="checkbox" name="promocionesCheck" value="${index}">
+          ${promo.descripcion} - $${promo.precioConDescuento}
+        </label>
       </div>
     `;
   });
@@ -72,13 +91,21 @@ function uiConsultarPromociones() {
 
 function uiCrearPedido() {
   let checks = document.querySelectorAll('input[name="pedidosCheck"]:checked');
+  let promoChecks = document.querySelectorAll('input[name="promocionesCheck"]:checked');
+
   let ids = [];
   checks.forEach(c => ids.push(Number(c.value)));
-  if (ids.length > 0) {
-    crearPedidoProductos(ids);
+
+  let promoIds = [];
+  promoChecks.forEach(c => promoIds.push(Number(c.value)));
+
+  if (ids.length > 0 || promoIds.length > 0) {
+    crearPedidoProductos(ids, promoIds);
     renderClientePedidos();
     uiConsultarProductos();
-    checks.forEach(c => c.checked = false);
+    uiConsultarPromociones();
+  } else {
+    alert("Por favor, selecciona al menos un producto o promoción.");
   }
 }
 
