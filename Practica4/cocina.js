@@ -206,18 +206,15 @@ async function uiIniciarPreparacion(pedidoId) {
   let pedidos = (typeof listarPedidosCliente === "function") ? listarPedidosCliente() : [];
   let p = pedidos.find(item => item.id === pedidoId);
   if (!p) return;
-  
-  // 1. Cambiar a Preparando
+
   p.estado = 'Preparando';
   actualizarTodasLasVistas();
-  
-  // 2. Esperar 5s y pasar a Empacando si no se ha cancelado
+
   await esperar(5000);
   if (p.estado === 'Cancelado') return;
   p.estado = 'Empacando';
   actualizarTodasLasVistas();
-  
-  // 3. Esperar 5s y pasar a Pedido entregado si no se ha cancelado
+
   await esperar(5000);
   if (p.estado === 'Cancelado') return;
   p.estado = 'Pedido entregado';
@@ -231,5 +228,8 @@ function actualizarTodasLasVistas() {
   }
   if (typeof renderCaja === "function") {
     renderCaja();
+  }
+  if (typeof renderRegistroPedidos === "function") {
+    renderRegistroPedidos();
   }
 }

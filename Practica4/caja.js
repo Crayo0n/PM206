@@ -1,4 +1,3 @@
-
 let listaPedidos = [];
 let carritoCaja = [];
 
@@ -33,30 +32,58 @@ function obtenerTotalAcumulado() {
   return total;
 }
 
-function renderCaja() {
+function cancelarPedidoCaja(id) {
+  let pedido = listaPedidos.find(p => p.id === id);
+  if (pedido && pedido.estado !== 'Pedido entregado' && pedido.estado !== 'Cancelado') {
+    pedido.estado = 'Cancelado';
+    renderRegistroPedidos();
+    if (typeof renderPedidosCocina === "function") renderPedidosCocina();
+  }
+}
+
+function renderRegistroPedidos() {
   let div = document.getElementById("listaPedidosCaja");
   if (!div) return;
   div.innerHTML = "";
-
-  let pedidos = listarPedidos();
-  pedidos.forEach(pedido => {
-    const { id, items, subtotal: s = 0, iva: i = 0, total: t = 0 } = pedido;
+  listaPedidos.forEach(pedido => {
+    const { id, items, total: t = 0, estado } = pedido;
     let itemsStr = items.map(({ nombre }) => nombre).join(", ");
-
+    let colorEstado = typeof getColorEstado === "function" ? getColorEstado(estado) : '#333';
+    let botonCancelar = "";
+    if (estado !== 'Pedido entregado' && estado !== 'Cancelado') {
+      botonCancelar = `<button onclick="cancelarPedidoCaja(${id})" style="margin-left: 10px; padding: 2px 6px; font-size: 0.85em; cursor: pointer; background-color: #f44336; color: white; border: none; border-radius: 3px;">Cancelar</button>`;
+    }
     div.innerHTML += `
-      <div style="margin-bottom: 8px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; background-color: #fafafa;">
-        <strong>Pedido #${id}:</strong> ${itemsStr} <br>
-        <span style="color: #666; font-size: 0.9em;">
-          Subtotal: $${Number(s).toFixed(2)} | IVA (16%): $${Number(i).toFixed(2)} | <strong>Total: $${Number(t).toFixed(2)}</strong>
+      <div style="margin-bottom: 8px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; background-color: #fcfcfc;">
+        <strong>Pedido #${id}:</strong> ${itemsStr} - <strong>Total: $${Number(t).toFixed(2)}</strong> <br>
+        <span style="font-size: 0.9em; color: #555;">
+          Estado: <strong style="color: ${colorEstado};">${estado}</strong>
         </span>
+        ${botonCancelar}
       </div>
     `;
   });
 }
 
+function renderCaja() {
+  let div = document.getElementById("estadosPedidosCaja");
+  if (!div) return;
+  div.innerHTML = "";
+
+  let pedidos = typeof listarPedidosCliente === "function" ? listarPedidosCliente() : [];
+  if (pedidos.length === 0) {
+    div.innerHTML = "Sin pedidos.";
+    return;
+  }
+
+  pedidos.forEach(p => {
+    div.innerHTML += `<div class="pedido-item">Pedido #${p.id}: <strong>${p.estado}</strong></div>`;
+  });
+}
+
 function uiRegistrarPedido(pedido) {
   agregarPedido(pedido);
-  renderCaja();
+  renderRegistroPedidos();
 }
 
 function renderProductosCaja() {
@@ -162,36 +189,45 @@ function uiRenderCarritoCaja() {
 }
 
 function uiCrearPedidoCaja() {
-  if (carritoCaja.length > 0) {
-    let items = carritoCaja.map(item => ({
-      id: item.id,
-      nombre: item.cantidad > 1 ? `${item.nombre} (x${item.cantidad})` : item.nombre,
-      precio: item.precio * item.cantidad
-    }));
-
-    const subtotal = items.reduce((acum, { precio }) => acum + Number(precio), 0);
-    const iva = subtotal * 0.16;
-    const total = subtotal + iva;
-
-    let nuevoPedido = {
-      id: listarPedidos().length + 1,
-      items,
-      subtotal,
-      iva,
-      total
-    };
-
-    uiRegistrarPedido(nuevoPedido);
-
-    carritoCaja = [];
-    uiRenderCarritoCaja();
-  } else {
+  if (carritoCaja.length === 0) {
     alert("Por favor, agrega al menos un producto al carrito de caja.");
+    return;
   }
+
+  let items = carritoCaja.map(item => ({
+    id: item.id,
+    nombre: item.cantidad > 1 ? `${item.nombre} (x${item.cantidad})` : item.nombre,
+    precio: item.precio * item.cantidad
+  }));
+
+  const subtotal = items.reduce((acum, { precio }) => acum + Number(precio), 0);
+  const iva = subtotal * 0.16;
+  const total = subtotal + iva;
+
+  let pedidosShared = typeof listarPedidosCliente === "function" ? listarPedidosCliente() : [];
+
+  let nuevoPedido = {
+    id: pedidosShared.length + 1,
+    items,
+    subtotal,
+    iva,
+    total,
+    estado: 'Pedido recibido'
+  };
+
+  pedidosShared.push(nuevoPedido);
+  agregarPedido(nuevoPedido);
+  renderRegistroPedidos();
+
+  if (typeof renderPedidosCocina === "function") renderPedidosCocina();
+
+  carritoCaja = [];
+  uiRenderCarritoCaja();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   renderProductosCaja();
+  renderRegistroPedidos();
   renderCaja();
   uiRenderCarritoCaja();
 });
