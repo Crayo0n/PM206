@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Coffee Code - Sistema de Cafetería</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    .seccion {
+      border: 1px solid #ccc;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+    }
+    .producto-item, .pedido-item {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Coffee Code - Sistema de Cafetería</h1>
+
+  <div class="seccion">
+    <h2>1. Caja</h2>
+    <h3>Productos para Cobrar</h3>
+    <div id="productosCaja" style="margin-bottom: 10px;"></div>
+    
+    <h3>Carrito de Caja</h3>
+    <div id="carritoCajaContenido" style="margin-bottom: 10px; padding: 10px; border: 1px dashed #ccc; border-radius: 4px;">El carrito está vacío.</div>
+    <button onclick="uiCrearPedidoCaja()" style="margin-bottom: 15px; padding: 5px 10px;">Pagado</button>
+    
+    <h3>Registro de Pedidos</h3>
+    <div id="listaPedidosCaja"></div>
+  </div>
+
+  <div class="seccion">
+    <h2>2. Cocina</h2>
+    <div>
+      <input type="number" id="prodId" placeholder="ID">
+      <input type="text" id="prodNombre" placeholder="Nombre">
+      <input type="number" id="prodPrecio" placeholder="Precio">
+      <button onclick="uiAgregarProducto()">Agregar Producto</button>
+    </div>
+    <h3>Gestión de Productos</h3>
+    <div style="margin-bottom: 10px;">
+      <button onclick="renderCocina()">Todos</button>
+      <button onclick="uiFiltrarProductosCocina(buscarBebidas)">Bebidas</button>
+      <button onclick="uiFiltrarProductosCocina(buscarPostres)">Postres</button>
+      <button onclick="uiFiltrarProductosCocina(buscarProductosBaratos)">Baratos</button>
+      <button onclick="uiFiltrarProductosCocina(buscarProductosCaros)">Caros</button>
+    </div>
+    <div id="listaProductosCocina"></div>
+    
+    <h3>Gestión de Promociones</h3>
+    <div>
+      <input type="number" id="promoProdId" placeholder="ID Producto" style="width: 80px;">
+      <input type="number" id="promoDescuento" placeholder="% Desc" style="width: 70px;">
+      <input type="text" id="promoDesc" placeholder="Descripción (Opcional)">
+      <button onclick="uiCrearPromocionCocina()">Crear Promoción</button>
+    </div>
+    <div id="listaPromocionesCocina" style="margin-top: 10px;"></div>
+  </div>
+
+  <div class="seccion">
+    <h2>3. Cliente</h2>
+    <h3>Promociones</h3>
+    <div id="listaPromocionesCliente"></div>
+    <h3>Menú para Pedido</h3>
+    <div id="listaProductosCliente"></div>
+    
+    <h3>Carrito de Compra</h3>
+    <div id="carritoClienteContenido" style="margin-bottom: 10px; padding: 10px; border: 1px dashed #ccc; border-radius: 4px;">El carrito está vacío.</div>
+    <button onclick="uiCrearPedido()">Crear Pedido</button>
+    
+    <h3>Listar Pedidos</h3>
+    <div id="listaPedidosCliente"></div>
+  </div>
+
+  <script src="cocina.js"></script>
+  <script src="caja.js"></script>
+  <script src="cliente.js"></script>
+</body>
+</html>
