@@ -157,85 +157,79 @@ function agregarPromocion(idProducto, descuento, descripcion) {
     });
   }
 }
-function eliminarPromocion(idProducto) {
-  promociones = promociones.filter(p => p.idProducto !== Number(idProducto));
-}
+
 
 function listarPromociones() {
   return promociones;
 }
 
-function buscarProductosEnPromocion() {
-  let idsEnPromo = promociones.map(p => p.idProducto);
-  return productos.filter(p => idsEnPromo.includes(p.id));
-}
-function buscarPromocionPorProducto(idProducto) {
-  return promociones.find(p => p.idProducto === Number(idProducto));
-}
 
-function tienePromocion(idProducto) {
-  return promociones.find(p => p.idProducto === Number(idProducto)) !== undefined;
-}
-
-function obtenerPrecioFinal(idProducto) {
-  let promo = promociones.find(p => p.idProducto === Number(idProducto));
-  if (promo) {
-    return promo.precioConDescuento;
-  }
-  let producto = productos.find(p => p.id === Number(idProducto));
-  return producto ? producto.precio : null;
-}
 
 function esperar(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function revisarIngredientes() {
-  console.log("Revisando ingredientes en la cocina...");
-  await esperar(1500);
+function renderPedidosCocina() {
+  let div = document.getElementById("listaPedidosCocina");
+  if (!div) return;
+  div.innerHTML = "";
+  let pedidos = (typeof listarPedidosCliente === "function") ? listarPedidosCliente() : [];
   
-  let faltaIngrediente = Math.random() < 0.3; 
-  if (faltaIngrediente) {
-    throw new Error("Falta de ingrediente (ej. no hay granos de café).");
+  if (pedidos.length === 0) {
+    div.innerHTML = "<p>No hay pedidos pendientes en la cocina.</p>";
+    return;
   }
-  console.log('<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Todos los ingredientes completos.');
-}
-
-async function molerGranos() {
-  console.log("Moliendo granos de café...");
-  await esperar(2000);
-  console.log('<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Granos molidos.');
-}
-
-async function calentarAgua() {
-  console.log("Calentando agua...");
-  await esperar(3000);
-  console.log('<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Agua caliente.');
-}
-
-async function filtrarCafe() {
-  console.log("Filtrando el café...");
-  await esperar(2500);
-  console.log('<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Café filtrado.');
-}
-
-async function servirTaza() {
-  console.log("Sirviendo en la taza...");
-  await esperar(1000);
-  console.log('<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Taza servida.');
-}
-
-async function prepararCafe() {
-  console.log("--- INICIANDO PREPARACIÓN DE CAFÉ ---");
-  try {
-    await revisarIngredientes();
-    await molerGranos();
-    await calentarAgua();
-    await filtrarCafe();
-    await servirTaza();
+  
+  pedidos.forEach(p => {
+    let itemsStr = p.items.map(item => item.nombre).join(", ");
+    let botonPreparar = "";
+    if (p.estado === 'Pedido recibido') {
+      botonPreparar = `<button onclick="uiIniciarPreparacion(${p.id})" style="margin-left: 10px; padding: 2px 6px; cursor: pointer; background-color: #2196F3; color: white; border: none; border-radius: 3px;">Preparar Pedido</button>`;
+    }
     
-    console.log('--- ¡EL CAFÉ ESTÁ LISTO PARA DISFRUTAR! <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="brown" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg> ---');
-  } catch (error) {
-    console.error('<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg> Error en la cocina al preparar el café:', error.message);
+    let colorEstado = '#333';
+    if (typeof getColorEstado === 'function') {
+      colorEstado = getColorEstado(p.estado);
+    }
+    
+    div.innerHTML += `
+      <div style="margin-bottom: 8px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; background-color: #fafafa;">
+        <strong>Pedido #${p.id}:</strong> ${itemsStr} | 
+        Estado: <strong style="color: ${colorEstado};">${p.estado}</strong>
+        ${botonPreparar}
+      </div>
+    `;
+  });
+}
+
+async function uiIniciarPreparacion(pedidoId) {
+  let pedidos = (typeof listarPedidosCliente === "function") ? listarPedidosCliente() : [];
+  let p = pedidos.find(item => item.id === pedidoId);
+  if (!p) return;
+  
+  // 1. Cambiar a Preparando
+  p.estado = 'Preparando';
+  actualizarTodasLasVistas();
+  
+  // 2. Esperar 5s y pasar a Empacando si no se ha cancelado
+  await esperar(5000);
+  if (p.estado === 'Cancelado') return;
+  p.estado = 'Empacando';
+  actualizarTodasLasVistas();
+  
+  // 3. Esperar 5s y pasar a Pedido entregado si no se ha cancelado
+  await esperar(5000);
+  if (p.estado === 'Cancelado') return;
+  p.estado = 'Pedido entregado';
+  actualizarTodasLasVistas();
+}
+
+function actualizarTodasLasVistas() {
+  renderPedidosCocina();
+  if (typeof renderClientePedidos === "function") {
+    renderClientePedidos();
+  }
+  if (typeof renderCaja === "function") {
+    renderCaja();
   }
 }

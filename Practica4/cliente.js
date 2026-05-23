@@ -126,6 +126,36 @@ function uiConsultarPromociones() {
   });
 }
 
+function actualizarEstadoPedido(id, nuevoEstado) {
+  let pedido = pedidosCliente.find(p => p.id === id);
+  if (pedido && pedido.estado !== 'Cancelado') {
+    pedido.estado = nuevoEstado;
+    renderClientePedidos();
+  }
+}
+
+function cancelarPedidoCliente(id) {
+  let pedido = pedidosCliente.find(p => p.id === id);
+  if (pedido && pedido.estado !== 'Pedido entregado' && pedido.estado !== 'Cancelado') {
+    pedido.estado = 'Cancelado';
+    renderClientePedidos();
+    if (typeof renderPedidosCocina === "function") {
+      renderPedidosCocina();
+    }
+  }
+}
+
+function getColorEstado(estado) {
+  switch (estado) {
+    case 'Pedido recibido': return '#2196F3';
+    case 'Preparando': return '#FF9800';
+    case 'Empacando': return '#9C27B0';
+    case 'Pedido entregado': return '#4CAF50';
+    case 'Cancelado': return '#f44336';
+    default: return '#333';
+  }
+}
+
 function uiCrearPedido() {
   if (carritoCliente.length > 0) {
     let items = carritoCliente.map(item => ({
@@ -139,7 +169,8 @@ function uiCrearPedido() {
     let nuevoPedido = {
       id: pedidosCliente.length + 1,
       items: items,
-      total: total
+      total: total,
+      estado: 'Pedido recibido'
     };
 
     pedidosCliente.push(nuevoPedido);
@@ -153,6 +184,10 @@ function uiCrearPedido() {
     carritoCliente = [];
     uiRenderCarritoCliente();
     renderClientePedidos();
+    
+    if (typeof renderPedidosCocina === "function") {
+      renderPedidosCocina();
+    }
   } else {
     alert("Por favor, añade al menos un producto al carrito de compras.");
   }
@@ -165,7 +200,20 @@ function renderClientePedidos() {
   let pedidos = listarPedidosCliente();
   pedidos.forEach(p => {
     let itemsStr = p.items.map(item => item.nombre).join(", ");
-    div.innerHTML += `<div>Pedido #${p.id}: ${itemsStr} - Total: $${p.total.toFixed(2)}</div>`;
+    let botonCancelar = "";
+    if (p.estado !== 'Pedido entregado' && p.estado !== 'Cancelado') {
+      botonCancelar = `<button onclick="cancelarPedidoCliente(${p.id})" style="margin-left: 10px; padding: 2px 6px; font-size: 0.85em; cursor: pointer; background-color: #f44336; color: white; border: none; border-radius: 3px;">Cancelar</button>`;
+    }
+    
+    div.innerHTML += `
+      <div style="margin-bottom: 8px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; background-color: #fcfcfc;">
+        <strong>Pedido #${p.id}:</strong> ${itemsStr} - <strong>Total: $${p.total.toFixed(2)}</strong> <br>
+        <span style="font-size: 0.9em; color: #555;">
+          Estado: <strong style="color: ${getColorEstado(p.estado)};">${p.estado}</strong>
+        </span>
+        ${botonCancelar}
+      </div>
+    `;
   });
 }
 
@@ -173,6 +221,9 @@ function renderClientePedidos() {
 document.addEventListener("DOMContentLoaded", () => {
   if (typeof renderCocina === "function") {
     renderCocina();
+  }
+  if (typeof renderPedidosCocina === "function") {
+    renderPedidosCocina();
   }
   uiConsultarProductos();
   uiConsultarPromociones();
