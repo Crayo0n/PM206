@@ -10,7 +10,6 @@ import PressableScreen from './PressableScreen';
 import SafeAreaScreen from './SafeAreaScreen';
 import TarjetasScreen from './TarjetasScreen';
 import TextInputScreen from './TextInputScreen';
-import { Menu } from '../components/Menu';
 
 /*Zona2: Main - Hogar de los componentes */
 export default function MenuScreen() {
