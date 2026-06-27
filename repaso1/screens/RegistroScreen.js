@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { View, TextInput, Text, Button, Platform, Alert, StyleSheet, Keyboard, Switch} from 'react-native';
+import { View, TextInput, Text, Button, Platform, Alert, StyleSheet, Keyboard, Switch, SafeAreaView, ScrollView } from 'react-native';
+
+// Componente reutilizable: Encapsula la lógica de cada fila de opciones
+const CustomSwitch = ({ label, value, onValueChange }) => (
+  <View style={styles.switchContainer}>
+    <Text style={styles.switchLabel}>{label}</Text>
+    <Switch value={value} onValueChange={onValueChange} />
+  </View>
+);
 
 export default function RegistroScreen() {
   const [nombre, setNombre] = useState('');
@@ -18,12 +26,7 @@ export default function RegistroScreen() {
       return;
     }
 
-    const mensaje = `Nombre: ${nombre}
-    Carrera: ${carrera}
-    Semestre: ${semestre}
-    Taller: ${taller ? 'Sí' : 'No'}
-    Constancia: ${constancia ? 'Sí' : 'No'}
-    Deportes: ${deportivas ? 'Sí' : 'No'}`;
+    const mensaje = `Nombre: ${nombre}\nCarrera: ${carrera}\nSemestre: ${semestre}\nTaller: ${taller ? 'Sí' : 'No'}\nConstancia: ${constancia ? 'Sí' : 'No'}\nDeportes: ${deportivas ? 'Sí' : 'No'}`;
 
     alertasManager("Registro enviado", mensaje);
   };
@@ -37,53 +40,74 @@ export default function RegistroScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <TextInput style={styles.input} placeholder="Nombre Completo" value={nombre} onChangeText={setNombre} />
-      <TextInput style={styles.input} placeholder="Carrera" value={carrera} onChangeText={setCarrera} />
-      <TextInput style={styles.input} placeholder="Semestre" value={semestre} onChangeText={setSemestre} keyboardType="numeric" maxLength={2} />
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
+        
+        <TextInput style={styles.input} placeholder="Nombre Completo" value={nombre} onChangeText={setNombre} />
+        <TextInput style={styles.input} placeholder="Carrera" value={carrera} onChangeText={setCarrera} />
+        <TextInput style={styles.input} placeholder="Semestre" value={semestre} onChangeText={setSemestre} keyboardType="numeric" maxLength={2} />
 
-      <Text style={styles.sectionTitle}>Opciones</Text>
+        <Text style={styles.sectionTitle}>Opciones</Text>
 
-      <View style={styles.switchContainer}>
-        <Text>¿Asistirá al Taller?</Text>
-        <Switch value={taller} onValueChange={setTaller} />
-      </View>
+        {/* Uso del componente reutilizable: limpio y mantenible */}
+        <CustomSwitch label="¿Asistirá al Taller?" value={taller} onValueChange={setTaller} />
+        <CustomSwitch label="¿Requiere Constancia?" value={constancia} onValueChange={setConstancia} />
+        <CustomSwitch label="¿Participará en deportes?" value={deportivas} onValueChange={setDeportivas} />
 
-      <View style={styles.switchContainer}>
-        <Text>¿Requiere Constancia?</Text> 
-        <Switch value={constancia} onValueChange={setConstancia} />
-      </View>
+        <View style={styles.buttonContainer}>
+          <Button title="Enviar Registro" onPress={procesarRegistro} color="#007AFF" />
+        </View>
 
-      <View style={styles.switchContainer}>
-        <Text>¿Participará en deportes?</Text>
-        <Switch value={deportivas} onValueChange={setDeportivas} />
-      </View>
-
-      <Button title="Enviar Registro" onPress={procesarRegistro} />
-    </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { 
+  safeArea: { 
     flex: 1, 
+    backgroundColor: '#f5f6fa' 
+  },
+  scrollContainer: { 
+    flexGrow: 1, 
     justifyContent: 'center', 
-    padding: 20, 
-    backgroundColor: '#f5f6fa' },
+    padding: 24
+  },
   input: { 
     borderWidth: 1, 
     borderColor: '#dcdde1', 
-    padding: 12, 
+    padding: 14, 
     borderRadius: 8, 
-    marginBottom: 12, 
-    backgroundColor: '#fff' },
+    marginBottom: 14, 
+    backgroundColor: '#fff',
+    fontSize: 16
+  },
   sectionTitle: { 
-    fontSize: 16, 
+    fontSize: 18, 
     fontWeight: 'bold',
-    marginVertical: 10 },
+    marginVertical: 15,
+    color: '#2f3640'
+  },
   switchContainer: { 
     flexDirection: 'row', 
     justifyContent: 'space-between', 
     alignItems: 'center', 
-    marginBottom: 15 }
+    marginBottom: 18,
+    backgroundColor: '#fff',
+    padding: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#f0f2f5'
+  },
+  switchLabel: {
+    fontSize: 16,
+    color: '#333',
+    flex: 1,
+    marginRight: 10
+  },
+  buttonContainer: {
+    marginTop: 10,
+    borderRadius: 8,
+    overflow: 'hidden'
+  }
 });
