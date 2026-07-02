@@ -42,7 +42,7 @@ export default function MenuScreen() {
 
                             <View style={styles.contenedorBotones}>
                                 <Button title="Tarjetas" onPress={() => setScreen('tarjetas')}  />
-                                <Button title="SafeAreaView" onPress={() => setScreen('safeArea')} c />
+                                <Button title="SafeAreaView" onPress={() => setScreen('safeArea')}  />
                                 <Button title="FlatList" onPress={() => setScreen('flatList')}  />
                                 <Button title="ImageBackground" onPress={() => setScreen('imageBackground')} />
                                 <Button title="Modal" onPress={() => setScreen('modal')}  />
