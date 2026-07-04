@@ -12,8 +12,7 @@ export default function App() {
   const [genre, setGenre] = useState('');
   const [books, setBooks] = useState([]);
 
-  const backgroundImageUri = 'https://images.unsplash.com/photo-1589998059171-988d887df646?q=80&w=2000';
-
+  const backgroundImageUri = 'https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=1080&h=1920&q=80';
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowSplash(false);
@@ -50,7 +49,7 @@ export default function App() {
   if (showSplash) {
     return (
       <View style={styles.splashContainer}>
-        <Text style={styles.splashText}>Cargando App...</Text>
+        <Text style={styles.splashText}>Bienvenido</Text>
         <ActivityIndicator size="large" color="#ffffff" style={{ marginTop: 20 }} />
       </View>
     );
@@ -129,7 +128,7 @@ export default function App() {
 const styles = StyleSheet.create({
   splashContainer: {
     flex: 1,
-    backgroundColor: '#2c3e50',
+    backgroundColor: '#1a1a1a',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -145,12 +144,12 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Capa oscura para contraste
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
   },
   container: {
     flex: 1,
     padding: 20,
-    paddingTop: 40,
+    paddingTop: 50, 
   },
   mainTitle: {
     fontSize: 28,
@@ -164,12 +163,12 @@ const styles = StyleSheet.create({
   },
   // Formulario Glassmorphism
   formCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.15)', // Translúcido
+    backgroundColor: 'rgba(255, 255, 255, 0.12)', 
     padding: 20,
     borderRadius: 15,
     marginBottom: 25,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: 'rgba(255, 255, 255, 0.15)',
   },
   input: {
     backgroundColor: '#ffffff',
@@ -205,7 +204,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   bookCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)', // Casi opaco para legibilidad
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
     padding: 16,
     borderRadius: 10,
     marginBottom: 10,
@@ -220,12 +219,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#7f8c8d',
     marginTop: 4,
-  },
-  emptyText: {
-    textAlign: 'center',
-    color: '#bdc3c7',
-    fontSize: 16,
-    marginTop: 30,
-    fontStyle: 'italic',
   },
 });
